@@ -26,6 +26,7 @@ workflows:
     jobs:
       - cypress/run:
           post-steps:
+            - when: always
             - run: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report.json
             - run: npx marge mochareports/*.json -f report -o mochareports
             - run: npx cypress-slack-reporter --logger
