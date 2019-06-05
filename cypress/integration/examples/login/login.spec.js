@@ -12,7 +12,7 @@ describe('Logging In - HTML Web Form - The Internet', () => {
     })
     it('User granted access with valid details', () => {
       login.visit()
-      login.username.type('tomsmith')
+      login.username.type('nottomsmith')
       login.password.type('SuperSecretPassword!{enter}')
       login.successMsg.contains('You logged into a secure area!')
       login.logOutButton.should('exist')
