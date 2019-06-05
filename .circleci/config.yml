@@ -7,11 +7,11 @@ workflows:
     jobs:
       - cypress/run:
           post-steps:
-            - run: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report-$$(date +'%Y%m%d-%H%M%S').json
+            - run: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report.json
             - run: npx marge mochareports/*.json -f report-$$(date +'%Y%m%d-%H%M%S') -o mochareports
             - run: npx cypress-slack-reporter --logger
             - store_artifacts:
-                path: mochawesome-report
+                path: ./
             - store_test_results:
                 path: cypress/reports
           
@@ -29,12 +29,8 @@ workflows:
             - run: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report-$$(date +'%Y%m%d-%H%M%S').json
             - run: npx marge mochareports/*.json -f report-$$(date +'%Y%m%d-%H%M%S') -o mochareports
             - run: npx cypress-slack-reporter --logger
-            - store_test_results:
-                path: cypress/reports
             - store_artifacts:
-                path: mochareports
-            - store_artifacts:
-                path: mochawesome-report
+                path: ./
             - store_test_results:
                 path: cypress/results
          
