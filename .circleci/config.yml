@@ -11,7 +11,7 @@ workflows:
             - run: npx marge mochareports/*.json -f report -o mochareports
             - run: npx cypress-slack-reporter --logger
             - store_artifacts:
-                path: ./
+                path: mochareports
             - store_test_results:
                 path: cypress/reports
           
@@ -30,7 +30,7 @@ workflows:
             - run: npx marge mochareports/*.json -f report -o mochareports
             - run: npx cypress-slack-reporter --logger
             - store_artifacts:
-                path: ./
+                path: mochareports
             - store_test_results:
                 path: cypress/results
          
