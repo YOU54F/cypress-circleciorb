@@ -6,7 +6,7 @@ workflows:
   build:
     jobs:
       - cypress/run:
-          command: "npm run report" Tests run here
+          command: "npm run report"
           store_artifacts: true
           post-steps:
             - store_artifacts:
@@ -30,7 +30,7 @@ workflows:
                 - add-cypress
     jobs:
       - cypress/run:
-          command: "npm run report" Tests run here
+          command: "npm run report"
           store_artifacts: true
           post-steps:
             - store_test_results:
