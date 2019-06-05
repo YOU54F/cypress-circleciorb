@@ -1,0 +1,50 @@
+version: 2.1
+orbs:
+  cypress: cypress-io/cypress@1.7.0
+
+workflows:
+  build:
+    jobs:
+      - cypress/run:
+          command: "npm run report" Tests run here
+          store_artifacts: true
+          post-steps:
+            - store_artifacts:
+                path: mochawesome-report
+            - store_test_results:
+                path: cypress/reports
+      - cypress/run:
+          command: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report-$$(date +'%Y%m%d-%H%M%S').json
+      - cypress/run:
+          command: npx marge mochareports/*.json -f report-$$(date +'%Y%m%d-%H%M%S') -o mochareports
+      - cypress/run:
+          command: npx cypress-slack-reporter --logger
+          
+  nightly:
+    triggers: #use the triggers key to indicate a scheduled build
+      - schedule:
+          cron: "0 0 * * *" # use cron syntax to set the schedule
+          filters:
+            branches:
+              only:
+                - add-cypress
+    jobs:
+      - cypress/run:
+          command: "npm run report" Tests run here
+          store_artifacts: true
+          post-steps:
+            - store_test_results:
+                path: cypress/reports
+            - store_artifacts:
+                path: mochareports
+            - store_artifacts:
+                path: mochawesome-report
+            - store_test_results:
+                path: cypress/results
+      - cypress/run:
+          command: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report-$$(date +'%Y%m%d-%H%M%S').json
+      - cypress/run:
+          command: npx marge mochareports/*.json -f report-$$(date +'%Y%m%d-%H%M%S') -o mochareports
+      - cypress/run:
+          command: npx cypress-slack-reporter --logger
+         
