@@ -6,19 +6,14 @@ workflows:
   build:
     jobs:
       - cypress/run:
-          command: "npm run report"
-          store_artifacts: true
           post-steps:
+            - run: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report-$$(date +'%Y%m%d-%H%M%S').json
+            - run: npx marge mochareports/*.json -f report-$$(date +'%Y%m%d-%H%M%S') -o mochareports
+            - run: npx cypress-slack-reporter --logger
             - store_artifacts:
                 path: mochawesome-report
             - store_test_results:
                 path: cypress/reports
-      - cypress/run:
-          command: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report-$$(date +'%Y%m%d-%H%M%S').json
-      - cypress/run:
-          command: npx marge mochareports/*.json -f report-$$(date +'%Y%m%d-%H%M%S') -o mochareports
-      - cypress/run:
-          command: npx cypress-slack-reporter --logger
           
   nightly:
     triggers: #use the triggers key to indicate a scheduled build
@@ -30,9 +25,10 @@ workflows:
                 - add-cypress
     jobs:
       - cypress/run:
-          command: "npm run report"
-          store_artifacts: true
           post-steps:
+            - run: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report-$$(date +'%Y%m%d-%H%M%S').json
+            - run: npx marge mochareports/*.json -f report-$$(date +'%Y%m%d-%H%M%S') -o mochareports
+            - run: npx cypress-slack-reporter --logger
             - store_test_results:
                 path: cypress/reports
             - store_artifacts:
@@ -41,10 +37,4 @@ workflows:
                 path: mochawesome-report
             - store_test_results:
                 path: cypress/results
-      - cypress/run:
-          command: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report-$$(date +'%Y%m%d-%H%M%S').json
-      - cypress/run:
-          command: npx marge mochareports/*.json -f report-$$(date +'%Y%m%d-%H%M%S') -o mochareports
-      - cypress/run:
-          command: npx cypress-slack-reporter --logger
          
