@@ -22,7 +22,7 @@ workflows:
             - run: 
                 when: always
                 name: Merge MochaAwesome Reports
-                command: npx mochawesome-merge --reportDir cypress/reports/mocha > mochareports/report.json 
+                command: npx mochawesome-merge cypress/reports/mocha/*.json > mochareports/report.json 
             - run: 
                 when: always
                 name: Create mochawesome html report
